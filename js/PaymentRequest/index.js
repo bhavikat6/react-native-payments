@@ -366,6 +366,7 @@ export default class PaymentRequest {
     paymentData: string,
     shippingAddress: Object,
     payerEmail: string,
+    payerPhone: string,
     paymentToken?: string,
     paymentMethod: Object
   }) {
@@ -378,6 +379,8 @@ export default class PaymentRequest {
       this._shippingAddress = shippingAddress;
     }
 
+    console.log("Bhavika",this._shippingAddress,details);
+
     const paymentResponse = new PaymentResponse({
       requestId: this.id,
       methodName: IS_IOS ? 'apple-pay' : 'android-pay',
@@ -385,12 +388,13 @@ export default class PaymentRequest {
       details: this._getPlatformDetails(details),
       shippingOption: IS_IOS ? this._shippingOption : null,
       payerName: this._options.requestPayerName ? this._shippingAddress.recipient : null,
-      payerPhone: this._options.requestPayerPhone ? this._shippingAddress.phone : null,
+      payerPhone: this._options.requestPayerPhone ? details.payerPhone : null,
       payerEmail: IS_ANDROID && this._options.requestPayerEmail
         ? details.payerEmail
         : null
     });
 
+    console.log("THis is response ",paymentResponse)
     return this._acceptPromiseResolver(paymentResponse);
   }
 
